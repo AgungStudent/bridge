@@ -55,7 +55,13 @@
                     <tbody id="list">
                         {%for history in data %}
                         <tr>
-                            <td>{{history.foods[0].name}}</td>
+                            <td>
+                                {% if not history.foods %}
+                                -
+                                {% else %}
+                                {{history.foods}}
+                                {% endif %}
+                            </td>
                             <td>{{history.quantity}}</td>
                             <td>
                                 <span class="badge bg-primary">{{history.point}}</span>

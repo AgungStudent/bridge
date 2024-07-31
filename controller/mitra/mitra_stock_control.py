@@ -13,14 +13,11 @@ from schema.UniqueRule import ExistsRule
 
 
 def validate_save_stock(data, is_update=False):
-    today = datetime.now()
-    today -= timedelta(days=1)
-
     schema = {
         "name": [NotBlank(), Length(3, 50)],
         "price": [NotBlank(), GreaterThenOrEqual(0), LessThenOrEqual(50)],
         "stock": [NotBlank(), GreaterThenOrEqual(1)],
-        "expiredAt": [NotBlank(),DateAfter(today.strftime("%Y-%m-%d").date())],
+        "expiredAt": [NotBlank()],
     }
     if is_update:
         schema["_id"] = [NotBlank(), ExistsRule(FOOD_COLLECTION, "_id")]
@@ -69,6 +66,16 @@ def get_stocks():
 def create():
     mitraId = session.get("mitra_id")
     data, err = validate_save_stock(request.form.to_dict())
+    if err:
+        db.list_to_flash(err, "error")
+        return redirect(url_for("mitra_stock"))
+
+    today = datetime.now()
+    if datetime.strptime(data['expiredAt'],"%Y-%m-%d") < today:
+        flash('expired date tidak boleh sebelum hari ini','error')
+        return redirect(url_for("mitra_stock"))
+
+
     users, err = db.find(USER_COLLECTION, {"bookmark_mitra": mitraId})
     mitra, err = db.find(MITRA_COLLECTION, {"_id": mitraId})
     userList = []
@@ -84,9 +91,6 @@ def create():
     )
     msg.send()
 
-    if err:
-        db.list_to_flash(err, "error")
-        return redirect(url_for("mitra_stock"))
 
     data["mitra_id"] = mitraId
     data["claims"] = []

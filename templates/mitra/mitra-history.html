@@ -79,7 +79,7 @@
                             {% for history in data %}
                             <tr>
                                 <td>{{ history.name_food }}</td>
-                                <td>{{history.quantity}} Point</td>
+                                <td>{{history.quantity * history.point}} Point</td>
                                 <td><span class="badge bg-secondary">{{ history.user_name }}</span>
                                 </td>
                                 <td>{{ history.claimAt.strftime('%Y-%m-%d') }}</td>
