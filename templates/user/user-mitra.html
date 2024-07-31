@@ -42,7 +42,7 @@
                                         <h5 class="card-title">{{branch.name}}</h5>
                                     </div>
                                     <div class="col-md-2">
-                                        <a href="/user/mitra/bookmark/toggle" class="text-warning fw-bold text-end fs-4 d-block">
+                                        <a href="/user/mitra/bookmark/toggle?mitra_id={{branch._id}}" class="text-warning fw-bold text-end fs-4 d-block">
                                             <i class="fa-regular fa-bookmark"></i>
                                         </a>
                                     </div>
@@ -61,13 +61,13 @@
                                 <button class="btn btn-success btn-sm">
                                     <i class="fa-solid fa-location-dot"></i>
                                 </button>
-                                <button type="button" data-bs-toggle="modal" data-bs-target="#modalEdit"
+                                <button type="button" data-bs-toggle="modal" data-bs-target="#modalEdit{{branch._id}}"
                                     class="btn btn-warning btn-sm"><i class="fa-solid fa-bowl-food"></i></button>
                             </div>
                         </div>
                     </div>
     
-                    <div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="modalEditLabel"
+                    <div class="modal fade" id="modalEdit{{branch._id}}" tabindex="-1" aria-labelledby="modalEditLabel"
                         aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
