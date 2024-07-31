@@ -5,7 +5,8 @@ from flask import flash, redirect, render_template, request, session, url_for
 
 from config import FOOD_COLLECTION, USER_COLLECTION
 from model import db
-from schema.rules import (DateAfter, GreaterThenOrEqual, Length, LessThenOrEqual, NotBlank)
+from schema.rules import (DateAfter, GreaterThenOrEqual, Length,
+                          LessThenOrEqual, NotBlank)
 from schema.UniqueRule import ExistsRule
 
 

@@ -17,7 +17,7 @@ def validate_user_sign_up(data):
             "name": [NotBlank(), Length(3, 50)],
             "sktm": [NotBlank(), AllowedFile()],
             "password": [NotBlank(), Password()],
-            "nik": [NotBlank(), AllowedFile()],
+            "ktp": [NotBlank(), AllowedFile()],
             "email": [NotBlank(), Email(), UniqueRule(USER_COLLECTION, "email")],
             "city": [NotBlank()],
             "address": [NotBlank()],

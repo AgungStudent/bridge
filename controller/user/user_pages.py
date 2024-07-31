@@ -30,7 +30,9 @@ def get_user_mitra_map(user):
     mitra_list = []
     search = request.args.get("search", "")
 
-    mitras, err = db.find(MITRA_COLLECTION, {'name':{'$regex':search,'$options':'i'}})
+    mitras, err = db.find(
+        MITRA_COLLECTION, {"name": {"$regex": search, "$options": "i"}}
+    )
 
     if mitras is None:
         return mitra_list
@@ -77,7 +79,9 @@ def get_user_mitra(user):
         mitra_lon = float(mitra_point["lon"])
         distance = calculate_distance(user_lat, user_lon, mitra_lat, mitra_lon)
         mitra_point["distance"] = distance
-        mitra_point['map_link'] = f"https://www.google.com/maps?q={mitra_lat},{mitra_lon}&z=17&hl=en"
+        mitra_point["map_link"] = (
+            f"https://www.google.com/maps?q={mitra_lat},{mitra_lon}&z=17&hl=en"
+        )
         mitra_point["foods"] = next(
             (mitra["foods"] for mitra in result if mitra["_id"] == mitra_point["_id"]),
             [],
@@ -129,7 +133,9 @@ def get_user_mitra_bookmark(user):
         mitra_lat = float(mitra_point["lat"])
         mitra_lon = float(mitra_point["lon"])
         distance = calculate_distance(user_lat, user_lon, mitra_lat, mitra_lon)
-        mitra_point['map_link'] = f"https://www.google.com/maps?q={mitra_lat},{mitra_lon}&z=17&hl=en"
+        mitra_point["map_link"] = (
+            f"https://www.google.com/maps?q={mitra_lat},{mitra_lon}&z=17&hl=en"
+        )
         mitra_point["distance"] = distance
         mitra_point["foods"] = next(
             (mitra["foods"] for mitra in result if mitra["_id"] == mitra_point["_id"]),

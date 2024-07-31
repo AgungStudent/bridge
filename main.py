@@ -58,7 +58,7 @@ def mitra_reset_password(token):
 @app.route("/mitra/sign-in", methods=["GET", "POST"])
 def mitra_sign_in():
     if request.method == "GET":
-        return render_template("/mitra/mitra-login.html")
+        return render_template("/mitra/mitra-signin.html")
     return mitra_auth.mitra_sign_in()
 
 
@@ -149,7 +149,7 @@ def user_sign_up():
 @app.route("/user/sign-in", methods=["GET", "POST"])
 def user_sign_in():
     if request.method == "GET":
-        return render_template("/user/user-login.html")
+        return render_template("/user/user-signin.html")
     return auth.user_sign_in()
 
 
@@ -254,7 +254,7 @@ def user_token_generate():
 @app.route("/admin/sign-in", methods=["GET", "POST"])
 def admin_sign_in():
     if request.method == "GET":
-        return render_template("/admin/admin-login.html")
+        return render_template("/admin/admin-signin.html")
     return admin_pages.admin_sign_in()
 
 
