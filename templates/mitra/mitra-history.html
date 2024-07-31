@@ -77,9 +77,9 @@
                         </thead>
                         <tbody>
                             {% for history in data %}
-                            <tr>
+                            <tr id="list">
                                 <td>{{ history.name_food }}</td>
-                                <td>{{history.quantity * history.point}} Point</td>
+                                <td>{{ history.point }} Point</td>
                                 <td><span class="badge bg-secondary">{{ history.user_name }}</span>
                                 </td>
                                 <td>{{ history.claimAt.strftime('%Y-%m-%d') }}</td>
@@ -95,6 +95,17 @@
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
 
+    <script>
+        document.getElementById('search-input').addEventListener('keyup', function () {
+            var input = this.value.toLowerCase();
+            var rows = document.querySelectorAll('#list');
+
+            rows.forEach(function (row) {
+                var text = row.textContent.toLowerCase();
+                row.style.display = text.includes(input) ? '' : 'none';
+            });
+        });
+    </script>
 </body>
 
 </html>
