@@ -91,8 +91,8 @@
                     </div>
                 </div>
             </div>
+            {%for branch in data%}
             <div class="row mt-3">
-                {%for branch in data%}
                 <div class="col-md-6 mb-2 shadow-sm">
                     <div class="card mb-3">
                         <div class="card-body">
@@ -134,7 +134,7 @@
 
                                 <p class="fst-italic text-secondary">
                                     <i class="fa-solid fa-location-arrow"></i>
-                                    {{branch.distance}} Km
+                                    {{ "%.2f"|format(branch.distance) }} Km
                                 </p>
                             </div>
                         </div>
@@ -147,6 +147,7 @@
                         </div>
                     </div>
                 </div>
+
 
                 <div class="modal fade" id="modalEdit{{branch._id}}" tabindex="-1" aria-labelledby="modalEditLabel"
                     aria-hidden="true">
@@ -200,8 +201,9 @@
                     </div>
                 </div>
             </div>
+            {%endfor%}
+
         </div>
-        {%endfor%}
 
     </div>
     <script>
