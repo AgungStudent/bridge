@@ -1,0 +1,41 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light p-3 shadow-sm">
+    <div class="container-fluid">
+        <h3 class="navbar-brand">Welcome <span class="badge bg-primary mt-3">Admin</span> </h3>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/confirm/user">Verify User</a>
+                </li>
+
+            </ul>
+            <div class="d-flex">
+                <div style="float: right;" class="logout">
+                    <button style="float: right;" type="submit" class="btn btn-danger" data-bs-toggle="modal"
+                        data-bs-target="#logout">Log Out</button>
+                    <div class="modal fade" id="logout" tabindex="-1" aria-labelledby="logoutLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="logoutLabel">Logout</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Anda yakin ingin keluar?</p>
+                                    <form action="/admin/sign-out">
+                                        <button style="float: right;" type="submit" class="btn btn-danger">Log
+                                            Out</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

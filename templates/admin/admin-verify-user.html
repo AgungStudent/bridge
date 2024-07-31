@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Bridge</title>
+    <script src="https://kit.fontawesome.com/89a6ffe7be.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.0/css/dataTables.bootstrap5.css">
+</head>
+
+<body>
+    {%include '/admin/admin-navbar.html'%}
+    <div style="display: flex;justify-content: center;align-items:center;" class="container">
+        <div style="background-color: white;padding:4% 4%;margin-top:25%;border-radius:15px;box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;margin:3%"
+            class="col-md-12">
+            <div class="row">
+                <div class="col-md-6 mt-3">
+                    <h4>List User Belum Confirm</h4>
+                </div>
+                <div class="col-md-12 mt-3">
+                    <input type="text" id="search-input" class="form-control" placeholder="Cari ...">
+                </div>
+            </div>
+            <div class="table-responsive-sm">
+                <table id="datatable" class="table table-striped" style="width:100%">
+                    <thead>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th>NIK</th>
+                        <th>Status</th>
+                        <th>Detail</th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.email}}</td>
+                            <td>{{ user.address}}</td>
+                            <td>{{ user.nik}}</td>
+                            <td>
+                                {% if user.status == "APPROVE" %}
+                                <span class="badge bg-success">Setuju</span {% elif user.status=="PENDING" %} <span
+                                    class="badge bg-warning">Pending</span {% else %} <span
+                                    class="badge bg-danger">Ditolak</span {% endif %} </td>
+                            <td>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal">
+                                    View
+                                </button>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                                    data-bs-target="#status-change">
+                                    Status Change
+                                </button>
+                            </td>
+                            <!-- Button trigger modal -->
+                            <div class="modal fade" id="status-change" tabindex="-1" aria-labelledby="exampleModalLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <form action="/admin/confirm/user" method="post">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Rubah Status</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <input type="hidden" name="_id" value="{{user._id}}">
+                                                <select class="form-select" name="status"
+                                                    aria-label="Default select example" name="status">
+                                                    <option value="APPROVE">Terima</option>
+                                                    <option value="REJECT">Tolak</option>
+                                                </select>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-danger">Rubah</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog modal-xl">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Detail User</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <img src="{{url_for('static',filename='sktm/'+user.sktm)}}" alt="user"
+                                                class="rounded mx-auto d-block" style="width: 100%; " />
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/2.1.0/js/dataTables.bootstrap5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        new DataTable('#datatable');
+    </script>
+
+</body>
+
+</html>
