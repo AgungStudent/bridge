@@ -6,7 +6,8 @@ from flask_mailman import Mail
 
 import autorize
 from controller.admin import admin_pages
-from controller.mitra import mitra_auth, mitra_branch, mitra_mail, mitra_stock_control
+from controller.mitra import (mitra_auth, mitra_branch, mitra_mail,
+                              mitra_stock_control)
 from controller.user import auth, user_bookmark, user_mail, user_pages
 from model.db import user_signed
 
@@ -130,7 +131,8 @@ def mitra_stock_redeem():
 @app.route("/mitra/history")
 @autorize.mitra()
 def mitra_history():
-    return render_template("/mitra/mitra-history.html")
+    data = mitra_history.history()
+    return render_template("/mitra/mitra-history.html", data=data)
 
 
 # ====================
