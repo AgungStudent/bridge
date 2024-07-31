@@ -54,7 +54,7 @@ def mitra_forgot_password():
 @app.route("/mitra/reset-password/<token>", methods=["GET", "POST"])
 def mitra_reset_password(token):
     if request.method == "GET":
-        return render_template("/mitra/reset-password.html", token=token)
+        return render_template("/mitra/mitra-reset-password.html", token=token)
     return mitra_mail.reset_password(token)
 
 

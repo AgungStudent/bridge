@@ -59,6 +59,7 @@ def get_stocks():
 def create():
     mitraId = session.get("mitra_id")
     data, err = validate_save_stock(request.form.to_dict())
+    
     if err:
         db.list_to_flash(err, "error")
         return redirect(url_for("mitra_stock"))
