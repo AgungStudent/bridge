@@ -127,7 +127,7 @@ def user_sign_up():
 
     data["password"] = bcrypt.hashpw(data["password"].encode("utf-8"), bcrypt.gensalt())
     data["expiredAt"] = None  # when SKTM verified then change to date
-    data["balance"] = 100
+    data["balance"] = 50
     data["status"] = "PENDING"
     data["token"] = db.randomStr(6)
     data["bookmark_mitra"] = []

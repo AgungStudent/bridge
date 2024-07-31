@@ -160,6 +160,9 @@ def redeem():
         {
             "$push": {
                 "claims": transaksi
+            },
+            "$set":{
+                'stock': int(food.get('stock')) - int(transaksi.get('quantity'))
             }
         },
     )

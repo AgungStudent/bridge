@@ -58,7 +58,7 @@ def admin_confirm_user():
     )
     if error:
         flash(error, "error")
-    flash("berhasil merubah status user", "succes")
+    flash("berhasil merubah status user", "success")
     return redirect(url_for("admin_confirm_user"))
 
 

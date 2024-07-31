@@ -85,7 +85,6 @@ def mitra_sign_out():
 # BRANCH
 # ===========================
 @app.route("/mitra/terms")
-@autorize.mitra()
 def mitra_terms():
     return render_template("/mitra/terms.html")
 
