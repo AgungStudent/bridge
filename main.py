@@ -6,14 +6,10 @@ from flask_mailman import Mail
 
 import autorize
 from controller.admin import admin_pages
-from controller.mitra import (
-    mitra_auth,
-    mitra_branch,
-    mitra_history,
-    mitra_mail,
-    mitra_stock_control,
-)
-from controller.user import auth, user_bookmark, user_mail, user_pages
+from controller.mitra import (mitra_auth, mitra_branch, mitra_history,
+                              mitra_mail, mitra_stock_control)
+from controller.user import (auth, user_apply, user_bookmark, user_mail,
+                             user_pages)
 from model.db import user_signed
 
 app = Flask(__name__)
@@ -192,11 +188,6 @@ def user_histories():
 def user_mitra():
     user = user_signed()
     data = user_pages.get_user_mitra(user)
-    print(
-        data[0].get("_id") in user.get("bookmark_mitra"),
-        user.get("bookmark_mitra"),
-        data[0].get("_id"),
-    )
     return render_template("/user/user-mitra.html", data=data, user=user)
 
 
@@ -287,9 +278,11 @@ def admin_confirm_mitra():
 
 
 # Task Schaduler
-# @schaduler.task("cron", id="reset_user_balance", hour=0, minute=0)
-# def schadule_reset_user_balance():
-#     user_apply.schadule_generate_token()
+# @app.route("/reset", methods=["GET", "POST"])
+@schaduler.task("cron", id="reset_user_balance", hour=0, minute=0)
+def schadule_reset_user_balance():
+    user_apply.schadule_generate_token()
+    return ""
 
 
 app.run(port=8080, debug=True)

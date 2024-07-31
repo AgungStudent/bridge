@@ -1,175 +1,158 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Food Bridge</title>
-    <script
-      src="https://kit.fontawesome.com/89a6ffe7be.js"
-      crossorigin="anonymous"
-    ></script>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-      crossorigin="anonymous"
-    />
 
-    <style>
-      body {
-        background-color: #dcdbe5;
-      }
-      .navbar-rounded {
-        /* border-radius: 0 0 2rem 2rem; */
-        border-radius: 1.5rem;
-      }
-    </style>
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Food Bridge</title>
+  <script src="https://kit.fontawesome.com/89a6ffe7be.js" crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+  <link rel="stylesheet" href="{{ url_for('static',filename='css/toastr.css') }}" />
 
-  <body>
-    {%include '/user/user-navbar.html'%}
+  <style>
+    body {
+      background-color: #dcdbe5;
+    }
 
-    <div class="container mt-5">
-      <form action="" class="mb-3">
-        <div class="input-group mb-3">
-          <input
-            type="search"
-            class="form-control"
-            placeholder="Search..."
-            name="search"
-            aria-label="Recipient's username"
-            aria-describedby="basic-addon2"
-          />
-          <span class="input-group-text" id="basic-addon2">
-            <button class="btn btn-secondary" type="submit">
-              <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
-          </span>
-        </div>
-      </form>
+    .navbar-rounded {
+      /* border-radius: 0 0 2rem 2rem; */
+      border-radius: 1.5rem;
+    }
+  </style>
+</head>
 
-      <div class="mb-3">
-        <a href="/user/mitra" class="btn btn-secondary">Semua</a>
-        <a href="/user/mitra/bookmark" class="btn btn-primary">Bookmark</a>
-        <a href="/user/mitra/map" class="btn btn-secondary">Peta</a>
+<body>
+  {%include '/user/user-navbar.html'%}
+
+  <div class="container mt-5">
+    <form action="" class="mb-3">
+      <div class="input-group mb-3">
+        <input type="search" class="form-control" placeholder="Search..." name="search"
+          aria-label="Recipient's username" aria-describedby="basic-addon2" />
+        <span class="input-group-text" id="basic-addon2">
+          <button class="btn btn-secondary" type="submit">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </span>
       </div>
+    </form>
 
-      <div class="row">
-        {% for mitra in data %}
-        <div class="col-md-6 mb-2 shadow-sm">
-          <div class="card mb-3">
-            <div class="card-body">
-              <div class="row">
-                <div class="col-md-10">
-                  <h3 class="card-title">{{mitra.name}}</h3>
-                </div>
-                <div class="col-md-2">
-                  <a
-                    href="/user/mitra/bookmark/toggle?mitra_id={{mitra._id}}"
-                    class="text-warning fw-bold text-end fs-4 d-block"
-                  >
-                    {% if mitra._id in user.bookmark_mitra %}
-                    <i class="fa-solid fa-bookmark"></i>
-                    {% else %}
-                    <i class="fa-regular fa-bookmark"></i>
-                    {% endif %}
-                  </a>
-                </div>
-              </div>
-              <div class="card-text">
-                <p>{{ mitra.address }}</p>
-
-                <p class="fst-italic text-secondary">
-                  <i class="fa-solid fa-location-arrow"></i>
-                  {{ "%.2f"|format(mitra.distance) }} Km
-                </p>
-              </div>
-            </div>
-            <div class="card-footer bg-transparent">
-              <a href="{{mitra.map_link}}" class="btn btn-success">
-                <i class="fa-solid fa-location-dot"></i> Lokasi
-              </a>
-              <a
-                href="#"
-                class="btn btn-warning"
-                data-bs-target="#modalShows{{mitra._id}}"
-                data-bs-toggle="modal"
-              >
-                <i class="fa-solid fa-bowl-food"></i>
-                Produk
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Modal Product -->
-        <div
-          class="modal fade"
-          id="modalShows{{mitra._id}}"
-          tabindex="-1"
-          aria-labelledby="exampleModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">
-                  <i class="fa-solid fa-bowl-food"></i>
-                  Detail Product
-                </h1>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div class="modal-body">
-                <ol class="list-group list-group-numbered">
-                  {% for food in mitra.foods %}
-                  <li
-                    class="list-group-item d-flex justify-content-between align-items-start"
-                  >
-                    <div class="ms-2 me-auto">
-                      <div class="fw-bold">{{food.name}}</div>
-                      <i>Biaya: </i>
-                      {{food.price}}
-                      <i class="fa-solid fa-coins text-warning"></i>
-
-                      <div class="bg-transparent text-secondary fst-italic">
-                        <i class="fa-solid fa-calendar-days"></i>
-                        {{ food.createdAt.strftime('%Y-%m-%d') }}
-                        <i class="fa-solid fa-arrow-right"></i> {{
-                        food.expiredAt }}
-                      </div>
-                    </div>
-                    <span class="badge bg-primary rounded-pill"
-                      >Stock: {{ food.stock}}</span
-                    >
-                  </li>
-                  {% endfor %}
-                </ol>
-              </div>
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {% endfor %}
-      </div>
+    <div class="mb-3">
+      <a href="/user/mitra" class="btn btn-secondary">Semua</a>
+      <a href="/user/mitra/bookmark" class="btn btn-primary">Bookmark</a>
+      <a href="/user/mitra/map" class="btn btn-secondary">Peta</a>
     </div>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-      crossorigin="anonymous"
-    ></script>
-  </body>
+
+    <div class="row">
+      {% for mitra in data %}
+      <div class="col-md-6 mb-2 shadow-sm">
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-10">
+                <h3 class="card-title">{{mitra.name}}</h3>
+              </div>
+              <div class="col-md-2">
+                <a href="/user/mitra/bookmark/toggle?mitra_id={{mitra._id}}"
+                  class="text-warning fw-bold text-end fs-4 d-block">
+                  {% if mitra._id in user.bookmark_mitra %}
+                  <i class="fa-solid fa-bookmark"></i>
+                  {% else %}
+                  <i class="fa-regular fa-bookmark"></i>
+                  {% endif %}
+                </a>
+              </div>
+            </div>
+            <div class="card-text">
+              <p>{{ mitra.address }}</p>
+
+              <p class="fst-italic text-secondary">
+                <i class="fa-solid fa-location-arrow"></i>
+                {{ "%.2f"|format(mitra.distance) }} Km
+              </p>
+            </div>
+          </div>
+          <div class="card-footer bg-transparent">
+            <a href="{{mitra.map_link}}" class="btn btn-success">
+              <i class="fa-solid fa-location-dot"></i> Lokasi
+            </a>
+            <a href="#" class="btn btn-warning" data-bs-target="#modalShows{{mitra._id}}" data-bs-toggle="modal">
+              <i class="fa-solid fa-bowl-food"></i>
+              Produk
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Product -->
+      <div class="modal fade" id="modalShows{{mitra._id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">
+                <i class="fa-solid fa-bowl-food"></i>
+                Detail Product
+              </h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <ol class="list-group list-group-numbered">
+                {% for food in mitra.foods %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="ms-2 me-auto">
+                    <div class="fw-bold">{{food.name}}</div>
+                    <i>Biaya: </i>
+                    {{food.price}}
+                    <i class="fa-solid fa-coins text-warning"></i>
+
+                    <div class="bg-transparent text-secondary fst-italic">
+                      <i class="fa-solid fa-calendar-days"></i>
+                      {{ food.createdAt.strftime('%Y-%m-%d') }}
+                      <i class="fa-solid fa-arrow-right"></i> {{
+                      food.expiredAt }}
+                    </div>
+                  </div>
+                  <span class="badge bg-primary rounded-pill">Stock: {{ food.stock}}</span>
+                </li>
+                {% endfor %}
+              </ol>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% endfor %}
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script src="{{ url_for('static',filename='js/toastr.js') }}"></script>
+  <script>
+
+    {% for message in get_flashed_messages(with_categories = True) %}
+    {% if message[0] == 'error' %}
+    toastr.error("{{message[1]}}");
+    {% elif message[0] == 'success' %}
+    toastr.success("{{message[1]}}");
+    {% else %}
+    toastr.error("{{message[1]}}");
+    {% endif %}
+    {% endfor %}
+
+    // toastr.error("Are you the 6 fingered man?");
+    // toastr.success("Berhasil login");
+  </script>
+</body>
+
 </html>

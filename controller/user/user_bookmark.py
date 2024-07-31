@@ -27,6 +27,6 @@ def add_bookmark():
     if err:
         flash(err, "error")
         return redirect(url_for("user_mitra"))
-
+    __import__("pprint").pprint(user.get("bookmark_mitra"))
     flash("Berhasil membuat bookmark", "success")
     return redirect(url_for("user_mitra"))
