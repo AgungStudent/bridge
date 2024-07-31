@@ -17,7 +17,7 @@ def validate_user_sign_up(data):
             "name": [NotBlank(), Length(3, 50)],
             "sktm": [NotBlank(), AllowedFile()],
             "password": [NotBlank(), Password()],
-            "nik": [NotBlank(), Length(1, 16), UniqueRule(USER_COLLECTION, "nik")],
+            "nik": [NotBlank(), AllowedFile()],
             "email": [NotBlank(), Email()],
             "city": [NotBlank()],
             "address": [NotBlank()],
@@ -95,15 +95,25 @@ def user_sign_up():
         flash("upload sktm dulu")
         return redirect(url_for("user_sign_up"))
     data = request.form.to_dict()
-    fileSktm = request.files["sktm"]
-    filename = fileSktm.filename if fileSktm.filename else ""
+    file_sktm = request.files["sktm"]
+    filename = file_sktm.filename if file_sktm.filename else ""
     data["sktm"] = db.randomStr() + secure_filename(filename)
+
+    if "ktp" not in request.files:
+        flash("upload ktp dulu")
+        return redirect(url_for("user_sign_up"))
+    data = request.form.to_dict()
+    file_ktp = request.files["ktp"]
+    filename = file_ktp.filename if file_ktp.filename else ""
+    data["ktp"] = db.randomStr() + secure_filename(filename)
+
     data, err = validate_user_sign_up(data)
     if err:
         db.list_to_flash(err, "error")
         return redirect(url_for("user_sign_in"))
     data["role"] = "user"
-    fileSktm.save("static/sktm/" + data["sktm"])
+    file_sktm.save("static/sktm/" + data["sktm"])
+    file_ktp.save("static/ktp/" + data["ktp"])
 
     data["password"] = bcrypt.hashpw(data["password"].encode("utf-8"), bcrypt.gensalt())
     data["expiredAt"] = None  # when SKTM verified then change to date

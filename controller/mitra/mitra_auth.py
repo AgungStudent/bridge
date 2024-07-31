@@ -40,14 +40,14 @@ def mitra_sign_up():
         return redirect(url_for("mitra_sign_up"))
 
     data = request.form.to_dict()
-    fileKtp = request.files.get("ktp")
-    fileNpwp = request.files.get("npwp")
-    data, err = validate_new_mitra(data)
-    ktpFilename = fileKtp.filename if fileKtp.filename else ""
-    npwpFilename = fileNpwp.filename if fileNpwp.filename else ""
-    data["ktp"] = db.randomStr() + secure_filename(ktpFilename)
-    data["npwp"] = db.randomStr() + secure_filename(npwpFilename)
+    file_ktp = request.files.get("ktp")
+    file_npwp = request.files.get("npwp")
+    ktp_filename = file_ktp.filename if file_ktp.filename else ""
+    npwp_filename = file_npwp.filename if file_npwp.filename else ""
+    data["ktp"] = db.randomStr() + secure_filename(ktp_filename)
+    data["npwp"] = db.randomStr() + secure_filename(npwp_filename)
 
+    data, err = validate_new_mitra(data)
     if err:
         db.list_to_flash(err, "error")
         return redirect(url_for("mitra_sign_up"))
@@ -59,8 +59,8 @@ def mitra_sign_up():
     if err:
         flash(err)
         return redirect(url_for("mitra_sign_up"))
-    fileKtp.save("static/mitra/ktp/" + ktpFilename)
-    fileNpwp.save("static/mitra/npwp/" + npwpFilename)
+    file_ktp.save("static/mitra/ktp/" + ktp_filename)
+    file_npwp.save("static/mitra/npwp/" + npwp_filename)
 
     flash("berhasil registrasi, silahkan login", "success")
     return redirect(url_for("mitra_sign_in"))

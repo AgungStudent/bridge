@@ -25,6 +25,7 @@ def validate_new_branch(data):
         is_err_to_list=True,
     )
 
+
 def validate_update_branch(data):
     return validate(
         {
@@ -40,10 +41,21 @@ def validate_update_branch(data):
         is_err_to_list=True,
     )
 
+
 def get_branch():
-    mitraParent = session['mitra_id']
-    mitraList,err = db.find(MITRA_COLLECTION, {"parentId": mitraParent})
-    return mitraList
+    mitra_parent_id = session["mitra_id"]
+    mitra_list, err = db.find(MITRA_COLLECTION, {"parentId": mitra_parent_id})
+    return mitra_list
+
+
+def get_one():
+    mitra_id = request.args.get("id")
+    mitra, err = db.find(MITRA_COLLECTION, {"_id": mitra_id})
+    if mitra is None:
+        flash("mitra tidak ditemukkan", "error")
+        return redirect(url_for("manage_mitra_branch"))
+    return mitra
+
 
 def add_branch():
     data, err = validate_new_branch(request.form.to_dict())
@@ -52,7 +64,7 @@ def add_branch():
 
     data["password"] = bcrypt.hashpw(data["password"].encode("utf-8"), bcrypt.gensalt())
 
-    data["parentId"] = session['mitra_id']
+    data["parentId"] = session["mitra_id"]
     data["verifyAt"] = datetime.now()
     data["foods"] = []
 
@@ -61,7 +73,9 @@ def add_branch():
         flash(err)
         return redirect(url_for("manage_mitra_branch"))
 
+    flash("berhasil membuat cabang", "success")
     return redirect(url_for("manage_mitra_branch"))
+
 
 def update_branch():
     data, err = validate_update_branch(request.form.to_dict())
@@ -76,6 +90,7 @@ def update_branch():
 
     flash("berhasil merubah cabang", "success")
     return redirect(url_for("manage_mitra_branch"))
+
 
 def delete_branch():
     branch, err = db.delete_one(MITRA_COLLECTION, {"_id": request.form.get("_id")})
