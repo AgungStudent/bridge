@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from apn_validators import validate
 from flask import flash, redirect, render_template, request, session, url_for
@@ -13,11 +13,14 @@ from schema.UniqueRule import ExistsRule
 
 
 def validate_save_stock(data, is_update=False):
+    today = datetime.now()
+    today -= timedelta(days=1)
+
     schema = {
         "name": [NotBlank(), Length(3, 50)],
         "price": [NotBlank(), GreaterThenOrEqual(0), LessThenOrEqual(50)],
         "stock": [NotBlank(), GreaterThenOrEqual(1)],
-        "expiredAt": [NotBlank()],
+        "expiredAt": [NotBlank(),DateAfter(today.strftime("%Y-%m-%d").date())],
     }
     if is_update:
         schema["_id"] = [NotBlank(), ExistsRule(FOOD_COLLECTION, "_id")]
