@@ -2,11 +2,16 @@ from datetime import datetime
 
 from apn_validators import validate
 from flask import flash, redirect, render_template, request, session, url_for
-
-from config import FOOD_COLLECTION, USER_COLLECTION
+from flask_mailman import EmailMessage, Mail
+from config import FOOD_COLLECTION, USER_COLLECTION, MITRA_COLLECTION
 from model import db
-from schema.rules import (DateAfter, GreaterThenOrEqual, Length,
-                          LessThenOrEqual, NotBlank)
+from schema.rules import (
+    DateAfter,
+    GreaterThenOrEqual,
+    Length,
+    LessThenOrEqual,
+    NotBlank,
+)
 from schema.UniqueRule import ExistsRule
 
 
@@ -59,7 +64,18 @@ def get_stocks():
 def create():
     mitraId = session.get("mitra_id")
     data, err = validate_save_stock(request.form.to_dict())
-    
+    user, err = db.find(USER_COLLECTION, {"bookmark_mitra": mitraId})
+    mitra, err = db.find(MITRA_COLLECTION, {"_id": mitraId})
+    print("email e:")
+    # kurang looping user e men entok kabeh email
+    msg = EmailMessage(
+        "Password Reset",
+        f"Mitra {mitra[0]["name"]} telah menambah menu baru, segera login untuk menukar makanan dengan poin",
+        "foodbridge@fastmail.com",
+        [user[0]["email"]],
+    )
+    msg.send()
+
     if err:
         db.list_to_flash(err, "error")
         return redirect(url_for("mitra_stock"))
@@ -133,7 +149,7 @@ def redeem():
                     "userName": user.get("name"),
                     "quantity": data.get("quantity"),
                     "point": totalPrice,
-                    "claimAt":datetime.now()
+                    "claimAt": datetime.now(),
                 }
             }
         },
