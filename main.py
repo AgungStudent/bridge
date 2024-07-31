@@ -15,6 +15,7 @@ from controller.mitra import (
 )
 from controller.user import auth, user_bookmark, user_mail, user_pages
 from model.db import user_signed
+from model.db import mitra_signed
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "ABCDEFGHIJK"
@@ -33,7 +34,8 @@ app.config["MAIL_USE_SSL"] = True
 # app.config["MAIL_USE_TLS"] = True
 # app.config["MAIL_USE_SSL"] = False
 mail.init_app(app)
-
+from model import db
+from config import MITRA_COLLECTION
 
 schaduler = APScheduler()
 schaduler.api_enabled = True
@@ -95,11 +97,19 @@ def mitra_terms():
 
 
 @app.route("/mitra/branch", methods=["GET", "POST"])
-@autorize.mitra()
+@autorize.mitra('mitra')
 def manage_mitra_branch():
     if request.method == "GET":
-        mitraBranch = mitra_branch.get_branch()
-        return render_template("/mitra/mitra-branch.html", data=mitraBranch)
+        user = mitra_signed()
+        mitraId = session["mitra_id"]
+        datas, err = db.find(MITRA_COLLECTION, {"_id": mitraId})
+        mitras = ""
+        if datas[0].get("parentId") == None:
+            mitras = "parent"
+        mitraBranch = mitra_branch.get_branch(user)
+        return render_template(
+            "/mitra/mitra-branch.html", data=mitraBranch, mitra=mitras
+        )
     return mitra_branch.add_branch()
 
 
@@ -148,18 +158,25 @@ def mitra_stock_redeem():
 @autorize.mitra()
 def mitra_histories():
     data = mitra_history.history()
-    return render_template("/mitra/mitra-history.html", data=data)
+    mitraId = session["mitra_id"]
+    datas, err = db.find(MITRA_COLLECTION, {"_id": mitraId})
+    mitras = ""
+    if datas[0].get("parentId") == None:
+        mitras = "parent"
+    return render_template("/mitra/mitra-history.html", data=data, mitra=mitras)
 
 
 # ====================
 # USER
 # ====================
 
+
 @app.route("/user/sign-out", methods=["GET", "POST"])
 def user_sign_out():
     if session.get("user_id"):
         session.pop("user_id")
     return redirect(url_for("user_sign_in"))
+
 
 @app.route("/user/sign-up", methods=["GET", "POST"])
 def user_sign_up():

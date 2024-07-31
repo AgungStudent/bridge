@@ -42,7 +42,7 @@ def mitra(role=None):
                 data, _ = db.find_one(
                     MITRA_COLLECTION, {"_id": session.get("mitra_id")}
                 )
-                print(session.get("mitra_id"))
+                print("xx")
                 if data is not None:
                     if role is None:
                         return f(*args, **kwargs)
@@ -51,7 +51,7 @@ def mitra(role=None):
                     elif role == "branch" and data.get("parentId") is not None:
                         return f(*args, **kwargs)
                     flash("tidak punya akses")
-                    return redirect(url_for("user_index"))
+                    return redirect(url_for("mitra_stock"))
             return redirect(url_for("user_sign_in"))
 
         return decorated_function

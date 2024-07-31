@@ -52,8 +52,9 @@ def validate_redeem(data):
 def get_stocks():
     mitraId = session.get("mitra_id")
     data, err = db.find(FOOD_COLLECTION, {"mitra_id": mitraId})
+    datas, err = db.find(MITRA_COLLECTION, {"_id": mitraId})
     mitras = ''
-    if data[0].get("parentId") == None:
+    if datas[0].get("parentId") == None:
         mitras = "parent"
 
     if err:

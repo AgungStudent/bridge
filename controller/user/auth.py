@@ -125,6 +125,7 @@ def user_sign_up():
     if err:
         flash(err)
         return redirect(url_for("user_sign_up"))
+    flash("Berhasil membuat akun", "success")
     return redirect(url_for("user_sign_in"))
 
 

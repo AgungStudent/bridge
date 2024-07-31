@@ -11,6 +11,8 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.0/css/dataTables.bootstrap5.css">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/toastr.css') }}" />
+
 </head>
 
 <body>
@@ -168,6 +170,26 @@
             });
         });
     </script>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static',filename='js/toastr.js') }}"></script>
+<script>
+
+    {% for message in get_flashed_messages(with_categories = True) %}
+    {% if message[0] == 'error' %}
+    toastr.error("{{message[1]}}");
+    {% elif message[0] == 'success' %}
+    toastr.success("{{message[1]}}");
+    {% else %}
+    toastr.error("{{message[1]}}");
+    {% endif %}
+    {% endfor %}
+
+    // toastr.error("Are you the 6 fingered man?");
+    // toastr.success("Berhasil login");
+</script>
 </body>
 
 </html>
