@@ -102,7 +102,6 @@ def user_sign_up():
     if "ktp" not in request.files:
         flash("upload ktp dulu")
         return redirect(url_for("user_sign_up"))
-    data = request.form.to_dict()
     file_ktp = request.files["ktp"]
     filename = file_ktp.filename if file_ktp.filename else ""
     data["ktp"] = db.randomStr() + secure_filename(filename)
@@ -110,7 +109,7 @@ def user_sign_up():
     data, err = validate_user_sign_up(data)
     if err:
         db.list_to_flash(err, "error")
-        return redirect(url_for("user_sign_in"))
+        return redirect(url_for("user_sign_up"))
     data["role"] = "user"
     file_sktm.save("static/sktm/" + data["sktm"])
     file_ktp.save("static/ktp/" + data["ktp"])
@@ -126,7 +125,7 @@ def user_sign_up():
     if err:
         flash(err)
         return redirect(url_for("user_sign_up"))
-    return redirect(url_for("user_index"))
+    return redirect(url_for("user_sign_in"))
 
 
 def user_profile():

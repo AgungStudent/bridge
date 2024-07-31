@@ -32,27 +32,32 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Address</th>
-                        <th>NIK</th>
                         <th>Status</th>
-                        <th>Detail</th>
+                        <th>KTP</th>
+                        <th>SKTM</th>
                         <th></th>
                     </thead>
-                    <tbody>
+                    <tbody id="list">
                         {% for user in users %}
                         <tr>
                             <td>{{ user.name }}</td>
                             <td>{{ user.email}}</td>
                             <td>{{ user.address}}</td>
-                            <td>{{ user.nik}}</td>
                             <td>
                                 {% if user.status == "APPROVE" %}
                                 <span class="badge bg-success">Setuju</span {% elif user.status=="PENDING" %} <span
                                     class="badge bg-warning">Pending</span {% else %} <span
                                     class="badge bg-danger">Ditolak</span {% endif %} </td>
                             <td>
+                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                                    data-bs-target="#ktp{{user._id}}">
+                                    KTP
+                                </button>
+                            </td>
+                            <td>
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal">
-                                    View
+                                    data-bs-target="#sktm{{user._id}}">
+                                    SKTM
                                 </button>
                             </td>
                             <td>
@@ -81,22 +86,44 @@
                                                 </select>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
+                                                <button type="button" class="btn btn-light"
                                                     data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-danger">Rubah</button>
+                                                <button type="submit" class="btn btn-dark">Rubah</button>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
                             </div>
-
-                            <!-- Modal -->
-                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                                aria-hidden="true">
+                            <!-- Modal NIK -->
+                            <div class="modal fade" id="ktp{{user._id}}" tabindex="-1"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-xl">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Detail User</h1>
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Detail KTP</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <img src="{{url_for('static',filename='ktp/'+user.ktp)}}" alt="user"
+                                                class="rounded mx-auto d-block" style="width: 100%; " />
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Modal SKTM -->
+                            <div class="modal fade" id="sktm{{user._id}}" tabindex="-1"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-xl">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Detail SKTM</h1>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                         </div>
@@ -130,6 +157,17 @@
         new DataTable('#datatable');
     </script>
 
+    <script>
+        document.getElementById('search-input').addEventListener('keyup', function () {
+            var input = this.value.toLowerCase();
+            var rows = document.querySelectorAll('#list');
+
+            rows.forEach(function (row) {
+                var text = row.textContent.toLowerCase();
+                row.style.display = text.includes(input) ? '' : 'none';
+            });
+        });
+    </script>
 </body>
 
 </html>

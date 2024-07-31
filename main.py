@@ -139,6 +139,13 @@ def mitra_histories():
 # ====================
 # USER
 # ====================
+@app.route("/user/sign-out", methods=["GET", "POST"])
+def user_sign_out():
+    if session.get("user_id"):
+        session.pop("user_id")
+    return redirect(url_for("user_sign_in"))
+
+
 @app.route("/user/sign-up", methods=["GET", "POST"])
 def user_sign_up():
     if request.method == "GET":
