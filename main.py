@@ -39,6 +39,7 @@ schaduler = APScheduler()
 schaduler.api_enabled = True
 schaduler.init_app(app)
 
+
 @app.route("/")
 def index():
     return render_template("/index.html")
@@ -87,6 +88,12 @@ def mitra_sign_out():
 
 # BRANCH
 # ===========================
+@app.route("/mitra/terms")
+@autorize.mitra()
+def mitra_terms():
+    return render_template("/mitra/terms.html")
+
+
 @app.route("/mitra/branch", methods=["GET", "POST"])
 @autorize.mitra()
 def manage_mitra_branch():

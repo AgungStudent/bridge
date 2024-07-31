@@ -10,6 +10,8 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/toastr.css') }}" />
+
 </head>
 
 <body>
@@ -18,13 +20,6 @@
     <div style="display: flex;justify-content: center;align-items:center;" class="container">
         <div style="background-color: white;padding:4% 4%;margin-top:25%;border-radius:15px;box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;margin:3%"
             class="col-md-12">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-            {% for category, message in messages %}
-            <div class="alert alert-success" role="alert">
-                {{ category }}, {{ message }}
-            </div>
-            {% endfor %}
-            {% endwith %}
             <div class="row">
                 <div class="col-md-6 mt-3">
                     <h4>Daftar Cabang</h4>
@@ -93,7 +88,7 @@
             </div>
             <div class="row mt-3">
                 {%for branch in data%}
-                <div class="col-md-6 mb-2 shadow-sm">
+                <div class="col-md-6 mb-2 shadow-sm" id="list">
                     <div class="card mb-3">
                         <div class="card-body">
                             <div class="row">
@@ -101,13 +96,13 @@
                                     <h5 class="card-title">{{branch.name}}</h5>
                                 </div>
                                 <div class="col-md-2">
-                                    <button type="button" data-bs-toggle="modal" data-bs-target="#modalHapus"
-                                        class="btn btn-danger btn-sm">
+                                    <button type="button" data-bs-toggle="modal"
+                                        data-bs-target="#modalHapus{{branch._id}}" class="btn btn-danger btn-sm">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </div>
-                                <div class="modal fade" id="modalHapus" tabindex="-1" aria-labelledby="modalHapusLabel"
-                                    aria-hidden="true">
+                                <div class="modal fade" id="modalHapus{{branch._id}}" tabindex="-1"
+                                    aria-labelledby="modalHapusLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -120,7 +115,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <form action="/mitra/branch/delete" method="POST">
-                                                    <input type="hidden" name="_id" value="">
+                                                    <input type="hidden" name="_id" value="{{branch._id}}">
                                                     <button type="submit" class="btn btn-danger mt-3">Hapus</button>
                                                 </form>
                                                 </form>
@@ -160,7 +155,7 @@
                             </div>
                             <div class="modal-body">
                                 <form action="/mitra/branch/update" method="POST" id="item-form">
-                                    <input type="hidden" name="_id" id="">
+                                    <input type="hidden" name="_id" id="" value="{{branch._id}}">
                                     <div class="form-group">
                                         <label for="cabang-username">Email</label>
                                         <input value="{{branch.email}}" type="text" name="email" class="form-control"
@@ -190,8 +185,8 @@
                                             style="height: 250px;border-radius:5px;border-width:1%;">
                                         </div>
                                     </div>
-                                    <input type="hidden" name="lat" id="lat">
-                                    <input type="hidden" name="lon" id="lon">
+                                    <input type="hidden" name="lat" id="lat" value="{{branch.lat}}">
+                                    <input type="hidden" name="lon" id="lon" value="{{branch.lon}}">
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-warning mt-3">Edit</button>

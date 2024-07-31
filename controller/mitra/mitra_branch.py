@@ -1,9 +1,9 @@
 from datetime import datetime
+from math import atan2, cos, radians, sin, sqrt
 
 import bcrypt
 from apn_validators import validate
 from flask import flash, jsonify, redirect, request, session, url_for
-from math import atan2, cos, radians, sin, sqrt
 
 from config import MITRA_COLLECTION
 from model import db
@@ -31,7 +31,7 @@ def validate_update_branch(data):
     return validate(
         {
             "_id": [NotBlank()],
-            "email": [NotBlank(), UniqueRule(MITRA_COLLECTION, "email")],
+            "email": [NotBlank()],
             "name": [NotBlank(), Length(4, 50)],
             "city": [NotBlank()],
             "address": [NotBlank()],
@@ -98,7 +98,7 @@ def add_branch():
 
 def update_branch():
     data, err = validate_update_branch(request.form.to_dict())
-    print(data)
+    __import__("pprint").pprint(request.form.to_dict())
     if err:
         db.list_to_flash(err, "error")
         return redirect(url_for("manage_mitra_branch"))
@@ -119,6 +119,7 @@ def delete_branch():
 
     flash("berhasil menghapus cabang", "success")
     return redirect(url_for("manage_mitra_branch"))
+
 
 def calculate_distance(lat1, lon1, lat2, lon2):
     # Haversine formula to calculate the distance between two points on the earth
