@@ -3,6 +3,7 @@ from datetime import datetime
 import bcrypt
 from apn_validators import validate
 from flask import flash, jsonify, redirect, request, session, url_for
+from math import atan2, cos, radians, sin, sqrt
 
 from config import MITRA_COLLECTION
 from model import db
@@ -42,9 +43,27 @@ def validate_update_branch(data):
     )
 
 
-def get_branch():
+def get_branch(user):
     mitra_parent_id = session["mitra_id"]
-    mitra_list, err = db.find(MITRA_COLLECTION, {"parentId": mitra_parent_id})
+    mitra, err = db.find(MITRA_COLLECTION, {"parentId": mitra_parent_id})
+    print(mitra)
+    user_lat = float(user["lat"])
+    user_lon = float(user["lon"])
+    mitra_list = []
+    if mitra is None:
+        return mitra_list
+    for mitra_point in mitra:
+        mitra_lat = float(mitra_point["lat"])
+        mitra_lon = float(mitra_point["lon"])
+        distance = calculate_distance(user_lat, user_lon, mitra_lat, mitra_lon)
+        mitra_point["distance"] = distance
+        mitra_point["map_link"] = (
+            f"https://www.google.com/maps?q={mitra_lat},{mitra_lon}&z=17&hl=en"
+        )
+        mitra_list.append(mitra_point)
+    mitra_list.sort(key=lambda x: x["distance"])
+    print(mitra_list)
+
     return mitra_list
 
 
@@ -100,3 +119,17 @@ def delete_branch():
 
     flash("berhasil menghapus cabang", "success")
     return redirect(url_for("manage_mitra_branch"))
+
+def calculate_distance(lat1, lon1, lat2, lon2):
+    # Haversine formula to calculate the distance between two points on the earth
+    R = 6371.0  # Earth radius in kilometers
+
+    lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+
+    a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+    distance = R * c
+    return distance

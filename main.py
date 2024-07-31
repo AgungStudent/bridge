@@ -83,7 +83,8 @@ def mitra_sign_out():
 @autorize.mitra()
 def manage_mitra_branch():
     if request.method == "GET":
-        mitraBranch = mitra_branch.get_branch()
+        user = user_signed()
+        mitraBranch = mitra_branch.get_branch(user)
         return render_template("/mitra/mitra-branch.html", data=mitraBranch)
     return mitra_branch.add_branch()
 
