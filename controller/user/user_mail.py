@@ -43,6 +43,7 @@ def send_mail():
         [email["email"]],
     )
     msg.send()
+    flash("silahkan cek email anda", "success")
     return redirect(url_for("user_sign_in"))
 
 

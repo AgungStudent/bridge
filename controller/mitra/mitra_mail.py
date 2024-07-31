@@ -31,7 +31,8 @@ def validate_password(data):
 def send_mail():
     email, err = validate_email(request.form.to_dict())
     mitra, err = db.find_one(MITRA_COLLECTION, email)
-    print(mitra)
+    if mitra == None:
+        flash("email tidak terdaftar")
     token = mitra["token"]
     reset_url = url_for("mitra_reset_password", token=token, _external=True)
     msg = EmailMessage(
@@ -41,6 +42,7 @@ def send_mail():
         [email["email"]],
     )
     msg.send()
+    flash("silahkan cek email anda", "success")
     return redirect(url_for("mitra_sign_in"))
 
 

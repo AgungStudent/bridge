@@ -26,12 +26,12 @@ app.config["MAIL_PASSWORD"] = "8z3e5x237b2x2z2t"
 app.config["MAIL_USE_TLS"] = False
 app.config["MAIL_USE_SSL"] = True
 
-app.config["MAIL_SERVER"] = "smtp.gmail.com"
-app.config["MAIL_PORT"] = 587
-app.config["MAIL_USERNAME"] = "agungpn33@gmail.com"
-app.config["MAIL_PASSWORD"] = "zcsp abak chja aybp"
-app.config["MAIL_USE_TLS"] = True
-app.config["MAIL_USE_SSL"] = False
+# app.config["MAIL_SERVER"] = "smtp.gmail.com"
+# app.config["MAIL_PORT"] = 587
+# app.config["MAIL_USERNAME"] = "agungpn33@gmail.com"
+# app.config["MAIL_PASSWORD"] = "zcsp abak chja aybp"
+# app.config["MAIL_USE_TLS"] = True
+# app.config["MAIL_USE_SSL"] = False
 mail.init_app(app)
 
 
@@ -47,7 +47,7 @@ schaduler.init_app(app)
 @app.route("/mitra/forgot-password", methods=["GET", "POST"])
 def mitra_forgot_password():
     if request.method == "GET":
-        return render_template("/mitra/forgot-password.html")
+        return render_template("/mitra/mitra-forgot-password.html")
     return mitra_mail.send_mail()
 
 
@@ -172,10 +172,10 @@ def user_forgot_password():
     return user_mail.send_mail()
 
 
-@app.route("/reset-password/<token>", methods=["GET", "POST"])
+@app.route("/user/reset-password/<token>", methods=["GET", "POST"])
 def reset_password(token):
     if request.method == "GET":
-        return render_template("/user/reset-password.html", token=token)
+        return render_template("/user/user-reset-password.html", token=token)
     return user_mail.reset_password(token)
 
 
