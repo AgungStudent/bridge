@@ -6,10 +6,14 @@ from flask_mailman import Mail
 
 import autorize
 from controller.admin import admin_pages
-from controller.mitra import (mitra_auth, mitra_branch, mitra_history,
-                              mitra_mail, mitra_stock_control)
-from controller.user import (auth, user_apply, user_bookmark, user_mail,
-                             user_pages)
+from controller.mitra import (
+    mitra_auth,
+    mitra_branch,
+    mitra_history,
+    mitra_mail,
+    mitra_stock_control,
+)
+from controller.user import auth, user_bookmark, user_mail, user_pages
 from model.db import user_signed
 
 app = Flask(__name__)
@@ -38,6 +42,7 @@ schaduler.init_app(app)
 @app.route("/")
 def index():
     return render_template("/index.html")
+
 
 # ===========================
 # MITRA
@@ -86,8 +91,7 @@ def mitra_sign_out():
 @autorize.mitra()
 def manage_mitra_branch():
     if request.method == "GET":
-        user = user_signed()
-        mitraBranch = mitra_branch.get_branch(user)
+        mitraBranch = mitra_branch.get_branch()
         return render_template("/mitra/mitra-branch.html", data=mitraBranch)
     return mitra_branch.add_branch()
 
@@ -143,12 +147,12 @@ def mitra_histories():
 # ====================
 # USER
 # ====================
+
 @app.route("/user/sign-out", methods=["GET", "POST"])
 def user_sign_out():
     if session.get("user_id"):
         session.pop("user_id")
     return redirect(url_for("user_sign_in"))
-
 
 @app.route("/user/sign-up", methods=["GET", "POST"])
 def user_sign_up():
@@ -191,7 +195,6 @@ def reset_password(token):
 def user_histories():
     user = user_signed()
     data = user_pages.get_user_histories(user)
-    print(data)
     return render_template("/user/user-history.html", data=data, user=user)
 
 
@@ -200,6 +203,11 @@ def user_histories():
 def user_mitra():
     user = user_signed()
     data = user_pages.get_user_mitra(user)
+    print(
+        data[0].get("_id") in user.get("bookmark_mitra"),
+        user.get("bookmark_mitra"),
+        data[0].get("_id"),
+    )
     return render_template("/user/user-mitra.html", data=data, user=user)
 
 
@@ -289,18 +297,10 @@ def admin_confirm_mitra():
     return admin_pages.admin_confirm_mitra()
 
 
-@app.route("/test", methods=["GET", "POST"])
-def test():
-    mitra_stock_control.test_redeem()
-    return ""
-
-
 # Task Schaduler
-# @app.route("/reset", methods=["GET", "POST"])
-@schaduler.task("cron", id="reset_user_balance", hour=0, minute=0)
-def schadule_reset_user_balance():
-    user_apply.schadule_generate_token()
-    return ""
+# @schaduler.task("cron", id="reset_user_balance", hour=0, minute=0)
+# def schadule_reset_user_balance():
+#     user_apply.schadule_generate_token()
 
 
 app.run(port=8080, debug=True)

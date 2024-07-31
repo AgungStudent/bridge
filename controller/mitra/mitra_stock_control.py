@@ -52,10 +52,14 @@ def validate_redeem(data):
 def get_stocks():
     mitraId = session.get("mitra_id")
     data, err = db.find(FOOD_COLLECTION, {"mitra_id": mitraId})
+    mitras = ''
+    if data[0].get("parentId") == None:
+        mitras = "parent"
+
     if err:
         flash(err)
         return redirect(url_for("mitra_stock"))
-    return render_template("/mitra/mitra-stock.html", data=data, is_mitra=mitraId)
+    return render_template("/mitra/mitra-stock.html", data=data, is_mitra=mitraId, mitra=mitras)
 
 
 def create():
