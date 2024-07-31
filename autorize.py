@@ -42,8 +42,10 @@ def mitra(role=None):
                 data, _ = db.find_one(
                     MITRA_COLLECTION, {"_id": session.get("mitra_id")}
                 )
-                print("xx")
                 if data is not None:
+                    if data.get("verifyAt") is None:
+                        return redirect(url_for("mitra_verif"))
+
                     if role is None:
                         return f(*args, **kwargs)
                     elif role == "mitra" and data.get("parentId") is None:

@@ -86,6 +86,8 @@ def add_branch():
     data["parentId"] = session["mitra_id"]
     data["verifyAt"] = datetime.now()
     data["foods"] = []
+    data["status"] = "APPROVE"
+    data["verifyAt"] = datetime.now()
 
     _, err = db.insert_one(MITRA_COLLECTION, data)
     if err:

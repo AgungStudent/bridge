@@ -150,7 +150,7 @@ def user_profile():
 def resend_sktm(user):
     if "sktm" not in request.files:
         flash("upload sktm dulu")
-        return redirect(url_for("user_sign_up"))
+        return redirect(url_for("user_sign_in"))
     data = request.form.to_dict()
     data["_id"] = user.get("_id")
     file_sktm = request.files["sktm"]

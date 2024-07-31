@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -23,7 +22,7 @@
             class="col-md-12">
             <div class="row">
                 <div class="col-md-6 mt-3">
-                    <h4>List User Belum Confirm</h4>
+                    <h4>List Mitra Belum Confirm</h4>
                 </div>
                 <div class="col-md-12 mt-3">
                     <input type="text" id="search-input" class="form-control" placeholder="Cari ...">
@@ -37,7 +36,7 @@
                         <th>Address</th>
                         <th>Status</th>
                         <th>KTP</th>
-                        <th>SKTM</th>
+                        <th>NPWP</th>
                         <th></th>
                     </thead>
                     <tbody id="list">
@@ -60,7 +59,7 @@
                             <td>
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#sktm{{user._id}}">
-                                    SKTM
+                                    NPWP
                                 </button>
                             </td>
                             <td>
@@ -73,7 +72,7 @@
                             <div class="modal fade" id="status-change" tabindex="-1" aria-labelledby="exampleModalLabel"
                                 aria-hidden="true">
                                 <div class="modal-dialog">
-                                    <form action="/admin/confirm/user" method="post">
+                                    <form action="/admin/confirm/mitra" method="post">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h1 class="modal-title fs-5" id="exampleModalLabel">Rubah Status</h1>
@@ -108,7 +107,7 @@
                                                 aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <img src="{{url_for('static',filename='ktp/'+user.ktp)}}" alt="user"
+                                            <img src="{{url_for('static',filename='mitra/ktp/'+user.ktp)}}" alt="user"
                                                 class="rounded mx-auto d-block" style="width: 100%; " />
                                         </div>
                                         <div class="modal-footer">
@@ -130,7 +129,7 @@
                                                 aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <img src="{{url_for('static',filename='sktm/'+user.sktm)}}" alt="user"
+                                            <img src="{{url_for('static',filename='mitra/npwp/'+user.npwp)}}" alt="user"
                                                 class="rounded mx-auto d-block" style="width: 100%; " />
                                         </div>
                                         <div class="modal-footer">

@@ -63,17 +63,30 @@ def admin_confirm_user():
 
 
 def get_confirm_admin():
-    # TODO: maybe we should filter it only unverify SKTM user. Or just sort by unverify user
-    users, err = db.find(MITRA_COLLECTION, {})
+    users, err = db.find(MITRA_COLLECTION, {"status": {"$in": ["PENDING", "REJECT"]}})
     return users
 
 
 def admin_confirm_mitra():
     err = ExistsRule(MITRA_COLLECTION, "_id").validate(
-        request.form.get("id"), "id mitra"
+        request.form.get("_id"), "id mitra"
     )
     if err:
         flash(err, "error")
         return redirect(url_for("admin_confirm_mitra"))
-    flash("berhasil merubah status mitra", "succes")
+
+    mitra, err = db.find_one(MITRA_COLLECTION, {"_id": request.form.get("_id")})
+    new_status = request.form.get("status")
+    if new_status == "APPROVE":
+        verifyAt = datetime.now() + timedelta(days=90)
+    else:
+        verifyAt = None
+    updated_user, error = db.update_one(
+        MITRA_COLLECTION,
+        {"_id": mitra.get("_id")},
+        {"status": new_status, "verifyAt": verifyAt},
+    )
+    if error:
+        flash(error, "error")
+    flash("berhasil merubah status mitra", "success")
     return redirect(url_for("admin_confirm_mitra"))

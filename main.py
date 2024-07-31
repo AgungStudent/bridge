@@ -197,6 +197,16 @@ def user_verif():
     return auth.resend_sktm(user)
 
 
+@app.route("/mitra/verif", methods=["GET", "POST"])
+def mitra_verif():
+    status = session["status_mitra"]
+    if request.method == "GET":
+        return render_template("/mitra/mitra-verif.html", status=status)
+
+    user = mitra_signed()
+    return mitra_auth.resend_npwp(user)
+
+
 # mail
 @app.route("/user/forgot-password", methods=["GET", "POST"])
 def user_forgot_password():
@@ -315,7 +325,8 @@ def admin_sign_out():
 @app.route("/admin/confirm/mitra", methods=["GET", "POST"])
 def admin_confirm_mitra():
     if request.method == "GET":
-        admin_pages.get_confirm_admin()
+        mitras = admin_pages.get_confirm_admin()
+        return render_template("/admin/admin-verify-mitra.html", users=mitras)
     return admin_pages.admin_confirm_mitra()
 
 
