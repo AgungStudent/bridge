@@ -35,6 +35,9 @@ schaduler = APScheduler()
 schaduler.api_enabled = True
 schaduler.init_app(app)
 
+@app.route("/")
+def index():
+    return render_template("/index.html")
 
 # ===========================
 # MITRA

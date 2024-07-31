@@ -17,13 +17,16 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <img src="/static/img/Logo.png" width="10%" alt="">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <a class="nav-link" href="/mitra/stock">Stock</a>
         </li>
+        {% if mitra.parentId == None %}
         <li class="nav-item">
           <a class="nav-link" href="/mitra/branch">Cabang</a>
         </li>
+        {% endif %}
         <li class="nav-item">
             <a class="nav-link" href="/mitra/history">Riwayat</a>
           </li>
