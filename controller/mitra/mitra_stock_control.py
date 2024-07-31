@@ -64,15 +64,18 @@ def get_stocks():
 def create():
     mitraId = session.get("mitra_id")
     data, err = validate_save_stock(request.form.to_dict())
-    user, err = db.find(USER_COLLECTION, {"bookmark_mitra": mitraId})
+    users, err = db.find(USER_COLLECTION, {"bookmark_mitra": mitraId})
     mitra, err = db.find(MITRA_COLLECTION, {"_id": mitraId})
-    print("email e:")
+    userList = []
+    for user in users:
+        userList.append(user["email"])
+    print(userList)
     # kurang looping user e men entok kabeh email
     msg = EmailMessage(
         "Password Reset",
         f"Mitra {mitra[0]["name"]} telah menambah menu baru, segera login untuk menukar makanan dengan poin",
         "foodbridge@fastmail.com",
-        [user[0]["email"]],
+        userList,
     )
     msg.send()
 
