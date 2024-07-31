@@ -30,9 +30,10 @@ def validate_password(data):
 
 def send_mail():
     email, err = validate_email(request.form.to_dict())
-    user, err = db.find_one(USER_COLLECTION, email)
-    print("test")
-    print(user)
+    user, error = db.find_one(USER_COLLECTION, email)
+    if user == None:
+        flash("email tidak terdaftar")
+        return redirect(url_for("user_forgot_password"))
     token = user["token"]
     reset_url = url_for("reset_password", token=token, _external=True)
     msg = EmailMessage(

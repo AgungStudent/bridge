@@ -6,8 +6,13 @@ from flask_mailman import Mail
 
 import autorize
 from controller.admin import admin_pages
-from controller.mitra import (mitra_auth, mitra_branch, mitra_history,
-                              mitra_mail, mitra_stock_control)
+from controller.mitra import (
+    mitra_auth,
+    mitra_branch,
+    mitra_history,
+    mitra_mail,
+    mitra_stock_control,
+)
 from controller.user import auth, user_bookmark, user_mail, user_pages
 from model.db import user_signed
 
@@ -160,10 +165,10 @@ def user_verif():
 
 
 # mail
-@app.route("/forgot-password", methods=["GET", "POST"])
-def forgot_password():
+@app.route("/user/forgot-password", methods=["GET", "POST"])
+def user_forgot_password():
     if request.method == "GET":
-        return render_template("/user/forgot-password.html")
+        return render_template("/user/user-forgot-password.html")
     return user_mail.send_mail()
 
 
