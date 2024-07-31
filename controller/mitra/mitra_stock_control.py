@@ -3,15 +3,12 @@ from datetime import datetime
 from apn_validators import validate
 from flask import flash, redirect, render_template, request, session, url_for
 from flask_mailman import EmailMessage, Mail
-from config import FOOD_COLLECTION, USER_COLLECTION, MITRA_COLLECTION
+
+from config import (CLAIM_COLLECTION, FOOD_COLLECTION, MITRA_COLLECTION,
+                    USER_COLLECTION)
 from model import db
-from schema.rules import (
-    DateAfter,
-    GreaterThenOrEqual,
-    Length,
-    LessThenOrEqual,
-    NotBlank,
-)
+from schema.rules import (DateAfter, GreaterThenOrEqual, Length,
+                          LessThenOrEqual, NotBlank)
 from schema.UniqueRule import ExistsRule
 
 
@@ -128,35 +125,40 @@ def redeem():
         return redirect(url_for("mitra_stock"))
     user, err = db.find_one(USER_COLLECTION, {"tokenApply": data.get("token")})
     food, err = db.find_one(FOOD_COLLECTION, {"_id": data.get("_id")})
-    totalPrice = int(data.get("quantity", 1)) * int(food.get("price"))
-    balanceShift = int(user.get("balance")) - totalPrice
-    if balanceShift < 0:
+    total_price = int(data.get("quantity", 1)) * int(food.get("price"))
+    balance_shift = int(user.get("balance")) - total_price
+    if balance_shift < 0:
         flash("balance tidak cukup", "error")
         return redirect(url_for("mitra_stock"))
     result, err = db.update_one(
         USER_COLLECTION,
         {"_id": user.get("_id")},
-        {"balance": balanceShift, "tokenApply": ""},
+        {"balance": balance_shift, "tokenApply": ""},
     )
     if err:
         flash(err, "error")
         return redirect(url_for("mitra_stock"))
+
+    transaksi = {
+                    "userId": user.get("_id"),
+                    "userName": user.get("name"),
+                    "quantity": data.get("quantity"),
+                    "point": total_price,
+                    "claimAt": datetime.now(),
+                    'foodId': food.get('_id'),
+                    'mitraId':food.get('mitra_id')
+                }
 
     food, err = db.update_one_default(
         FOOD_COLLECTION,
         {"_id": food.get("_id")},
         {
             "$push": {
-                "claims": {
-                    "userId": user.get("_id"),
-                    "userName": user.get("name"),
-                    "quantity": data.get("quantity"),
-                    "point": totalPrice,
-                    "claimAt": datetime.now(),
-                }
+                "claims": transaksi
             }
         },
     )
+    transaksi, err = db.insert_one(CLAIM_COLLECTION,transaksi)    
     if err:
         flash(err, "error")
         return redirect(url_for("mitra_stock"))

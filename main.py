@@ -191,6 +191,7 @@ def reset_password(token):
 def user_histories():
     user = user_signed()
     data = user_pages.get_user_histories(user)
+    print(data)
     return render_template("/user/user-history.html", data=data, user=user)
 
 
@@ -286,6 +287,12 @@ def admin_confirm_mitra():
     if request.method == "GET":
         admin_pages.get_confirm_admin()
     return admin_pages.admin_confirm_mitra()
+
+
+@app.route("/test", methods=["GET", "POST"])
+def test():
+    mitra_stock_control.test_redeem()
+    return ""
 
 
 # Task Schaduler

@@ -52,15 +52,15 @@
                             <th>Waktu</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {%for history in data%}
+                    <tbody id="list">
+                        {%for history in data %}
                         <tr>
-                            <td>{{history.name}}</td>
-                            <td>{{history.claims[0].quantity}}</td>
+                            <td>{{history.foods[0].name}}</td>
+                            <td>{{history.quantity}}</td>
                             <td>
-                                <span class="badge bg-primary">{{history.claims[0].point}}</span>
+                                <span class="badge bg-primary">{{history.point}}</span>
                             </td>
-                            <td>{{history.claims[0].claimAt}}</td>
+                            <td>{{history.claimAt}}</td>
                         </tr>
                         {%endfor%}
                     </tbody>
@@ -100,6 +100,7 @@
         });
     </script>
     <!-- ALL WE NEED TO TOASTER -->
+
 </body>
 
 </html>

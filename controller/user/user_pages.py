@@ -1,9 +1,11 @@
 from datetime import datetime
 from math import atan2, cos, radians, sin, sqrt
 
+from bson.son import SON
 from flask import flash, redirect, request, url_for
 
-from config import FOOD_COLLECTION, MITRA_COLLECTION, USER_COLLECTION
+from config import (CLAIM_COLLECTION, FOOD_COLLECTION, MITRA_COLLECTION,
+                    USER_COLLECTION)
 from model import db
 
 
@@ -18,12 +20,32 @@ def generate_token(user):
 
 
 def get_user_histories(user):
-    histories, err = db.find(
-        FOOD_COLLECTION,
-        {"claims.$.userId": user.get("id")},
-        {"claims.$": 1, "name": 1, "quantity": 1},
-    )
-    return histories
+
+    pipeline = [
+        {
+            "$lookup": {
+                "from": "foods",
+                "localField": "foodId",
+                "foreignField": "_id",
+                "as": "foods",
+            }
+        },
+        {
+            "$project": {
+                "_id": 1,
+                "userName": 1,
+                "quantity": 1,
+                "point": 1,
+                "claimAt": 1,
+                "foods": {"name": 1},
+            }
+        },
+    ]
+
+    mitra_collection = db.get_db()[CLAIM_COLLECTION]
+    result = list(mitra_collection.aggregate(pipeline))
+
+    return result
 
 
 def get_user_mitra_map(user):
