@@ -6,16 +6,10 @@ from flask_mailman import Mail
 
 import autorize
 from controller.admin import admin_pages
-from controller.mitra import (
-    mitra_auth,
-    mitra_branch,
-    mitra_history,
-    mitra_mail,
-    mitra_stock_control,
-)
+from controller.mitra import (mitra_auth, mitra_branch, mitra_history,
+                              mitra_mail, mitra_stock_control)
 from controller.user import auth, user_bookmark, user_mail, user_pages
-from model.db import user_signed
-from model.db import mitra_signed
+from model.db import mitra_signed, user_signed
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "ABCDEFGHIJK"
@@ -34,8 +28,8 @@ app.config["MAIL_USE_SSL"] = True
 # app.config["MAIL_USE_TLS"] = True
 # app.config["MAIL_USE_SSL"] = False
 mail.init_app(app)
-from model import db
 from config import MITRA_COLLECTION
+from model import db
 
 schaduler = APScheduler()
 schaduler.api_enabled = True
@@ -97,7 +91,7 @@ def mitra_terms():
 
 
 @app.route("/mitra/branch", methods=["GET", "POST"])
-@autorize.mitra('mitra')
+@autorize.mitra("mitra")
 def manage_mitra_branch():
     if request.method == "GET":
         user = mitra_signed()
@@ -193,10 +187,14 @@ def user_sign_in():
     return auth.user_sign_in()
 
 
-@app.route("/user/verif")
+@app.route("/user/verif", methods=["GET", "POST"])
 def user_verif():
     status = session["status"]
-    return render_template("/user/user-verif.html", status=status)
+    if request.method == "GET":
+        return render_template("/user/user-verif.html", status=status)
+
+    user = user_signed()
+    return auth.resend_sktm(user)
 
 
 # mail

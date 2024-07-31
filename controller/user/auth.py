@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 from config import USER_COLLECTION
 from model import db
 from schema.rules import AllowedFile, Email, Length, NotBlank, Password
-from schema.UniqueRule import UniqueRule
+from schema.UniqueRule import ExistsRule, UniqueRule
 
 
 def validate_user_sign_up(data):
@@ -23,6 +23,17 @@ def validate_user_sign_up(data):
             "address": [NotBlank()],
             "lat": [NotBlank()],
             "lon": [NotBlank()],
+        },
+        data,
+        is_err_to_list=True,
+    )
+
+
+def validate_resend_sktm(data):
+    return validate(
+        {
+            "_id": [NotBlank(), ExistsRule(USER_COLLECTION, "_id")],
+            "sktm": [NotBlank(), AllowedFile()],
         },
         data,
         is_err_to_list=True,
@@ -134,3 +145,26 @@ def user_profile():
         data, _ = db.find_one(USER_COLLECTION, {"_id": session.get("user_id")})
         return data
     return None
+
+
+def resend_sktm(user):
+    if "sktm" not in request.files:
+        flash("upload sktm dulu")
+        return redirect(url_for("user_sign_up"))
+    data = request.form.to_dict()
+    data["_id"] = user.get("_id")
+    file_sktm = request.files["sktm"]
+    filename = file_sktm.filename if file_sktm.filename else ""
+    data["sktm"] = db.randomStr() + secure_filename(filename)
+    data, err = validate_resend_sktm(data)
+    if err:
+        db.list_to_flash(err, "error")
+        return redirect(url_for("user_verif"))
+    data["status"] = "PENDING"
+    result, err = db.update_one(USER_COLLECTION, {"_id": data.get("_id")}, data)
+    if err:
+        result(err, "error")
+        return redirect(url_for("user_verif"))
+    file_sktm.save("static/sktm/" + data["sktm"])
+    flash("berhasil mengirimkan sktm baru", "success")
+    return redirect(url_for("user_sign_in"))
