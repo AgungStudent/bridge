@@ -130,7 +130,7 @@ def mitra_stock_redeem():
 
 @app.route("/mitra/history")
 @autorize.mitra()
-def mitra_history():
+def mitra_histories():
     data = mitra_history.history()
     return render_template("/mitra/mitra-history.html", data=data)
 
