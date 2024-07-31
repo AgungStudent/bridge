@@ -81,11 +81,15 @@
                             <th>Waktu</th>
                         </thead>
                         <tbody>
-                            <td>Sari Roti</td>
-                            <td>10 Point</td>
-                            <td><span class="badge bg-secondary">user 1</span>
+                            {% for history in data %}
+                            <tr>
+                            <td>{{ history.name_food }}</td>
+                            <td>{{history.quantity}} Point</td>
+                            <td><span class="badge bg-secondary">{{ history.user_name }}</span>
                             </td>
-                            <td>2/12/24</td>
+                            <td>{{ history.claimAt.strftime('%Y-%m-%d') }}</td>
+                            </tr>
+                                {% endfor %}
                         </tbody>
                     </table>
                 </div>

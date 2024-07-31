@@ -132,6 +132,7 @@ def redeem():
                     "userName": user.get("name"),
                     "quantity": data.get("quantity"),
                     "point": totalPrice,
+                    "claimAt":datetime.now()
                 }
             }
         },

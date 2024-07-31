@@ -2,6 +2,11 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
+@app.route("/user/forgot-password")
+def user_forgot():
+    return render_template("/user/user-forgot-password.html")
+
+
 #=====MITRA=====
 
 @app.route("/mitra/stock")
