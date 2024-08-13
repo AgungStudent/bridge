@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 ### Miscellaneous Tasks
 
 - Update ([bda04d8](bda04d8d3e20280fa8dab5fab38dd5de936e4505))
+- Update ([72b6919](72b69198d747578219420a893b9ab1337af04336))
 
 ## [0.3.0] - 2024-08-13
 
